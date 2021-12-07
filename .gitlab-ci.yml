@@ -21,7 +21,7 @@ renovate:
     RENOVATE_EXTRA_FLAGS: mqhabzda/Renovate-gradle-issue
   stage: renovate
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - renovate $RENOVATE_EXTRA_FLAGS
   artifacts:
