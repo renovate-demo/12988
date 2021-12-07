@@ -1,12 +1,31 @@
-# You can override the included template(s) by including variable overrides
-# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
-# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
-# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
-# Note that environment variables can be set in several places
-# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
-- test
-sast:
-  stage: test
-include:
-- template: Security/SAST.gitlab-ci.yml
+  - renovate
+
+renovate:
+  image: renovate/renovate:29.30.1-slim@sha256:1c693bfa8f008304535dabeba4db73a184b1f709f5f4316c0f26279c2e8bd98b
+  services:
+    - docker:20.10.11-dind@sha256:79d0c6e997920e71e96571ef434defcca1364d693d5b937232decf1ee7524a9b
+  variables:
+    RENOVATE_TOKEN: $GITLAB_ACCESS_TOKEN
+    RENOVATE_BASE_DIR: $CI_PROJECT_DIR/renovate
+    RENOVATE_ENDPOINT: $CI_API_V4_URL
+    RENOVATE_PLATFORM: gitlab
+    RENOVATE_GIT_AUTHOR: Renovate Bot <bot@renovateapp.com>
+    RENOVATE_ONBOARDING_CONFIG: '{"$$schema": "https://docs.renovatebot.com/renovate-schema.json", "extends": ["config:base"] }'
+    RENOVATE_OPTIMIZE_FOR_DISABLED: 'true'
+    RENOVATE_REPOSITORY_CACHE: 'false'
+    RENOVATE_REQUIRE_CONFIG: 'false'
+    RENOVATE_EXTENDS: 'github>whitesource/merge-confidence:beta'
+    RENOVATE_LOG_FILE: renovate-log.ndjson
+    RENOVATE_LOG_FILE_LEVEL: debug
+    RENOVATE_EXTRA_FLAGS: mqhabzda/Renovate-gradle-issue
+  stage: renovate
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+  script:
+    - renovate $RENOVATE_EXTRA_FLAGS
+  artifacts:
+    when: always
+    expire_in: 1d
+    paths:
+      - "$RENOVATE_LOG_FILE"
