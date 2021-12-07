@@ -1,0 +1,11 @@
+ext.projectRepositories = [:]
+
+// exists only as an example when there is a need to use different repos based on particular condition
+if (System.getenv().containsKey("CI")) {
+    projectRepositories.google = "https://dl.google.com/android/maven2/"
+    projectRepositories.mavenCentral = "https://repo.maven.apache.org/maven2/"
+}
+else {
+    projectRepositories.google = "https://dl.google.com/android/maven2/"
+    projectRepositories.mavenCentral = "https://repo.maven.apache.org/maven2/"
+}
