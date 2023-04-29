@@ -4,7 +4,7 @@ stages:
 renovate:
   image: renovate/renovate:29.30.1-slim@sha256:1c693bfa8f008304535dabeba4db73a184b1f709f5f4316c0f26279c2e8bd98b
   services:
-    - docker:20.10.11-dind@sha256:79d0c6e997920e71e96571ef434defcca1364d693d5b937232decf1ee7524a9b
+    - docker:20.10.24-dind@sha256:b848ea12a51f9be34b5ad6774a93a015fee1c2017d1896414c2f8fbaeb0c87d3
   variables:
     RENOVATE_TOKEN: $GITLAB_ACCESS_TOKEN
     RENOVATE_BASE_DIR: $CI_PROJECT_DIR/renovate
